@@ -1,0 +1,36 @@
+.country {
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: rgb(199, 192, 192);
+    width:95%;
+    margin:10px;
+    padding:10px;
+    border-radius:10px;
+}
+.country:hover {
+    background-color: rgb(224, 216, 216);
+}
+.flag-container {
+    width:80px;
+    height: 50px;
+    margin-right:20px;
+}
+.flag {
+    width:80px;
+    height: 50px;
+}
+.info-name {
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+.info {
+    font-size: 1.2rem;
+    margin:0 20px;
+    width:500px;
+}
+.country-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
