@@ -34,3 +34,15 @@
     flex-direction: row;
     align-items: center;
 }
+.area-btn {
+    margin-left:3px;
+    border-radius: 10px;
+    border:none;
+    padding:5px;
+    width:30px;
+}
+.area-btn:hover {
+    cursor: pointer;
+    background-color: rgb(153, 30, 30);
+    color:#fff;
+}

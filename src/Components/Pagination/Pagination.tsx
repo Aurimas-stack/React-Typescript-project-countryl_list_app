@@ -5,10 +5,14 @@ type Props = {
     data: any[],
     RenderComponent: any,
     pageLimit: number,
-    dataLimit: number
+    dataLimit: number,
+    getCountry: (e: React.MouseEvent, name:string) => void,
+    leaveCountry: () => void,
+    changeAreaUnits: () => void,
+    miles: string[]
 }
 
-export const Pagination: React.FC<Props> = ({data, RenderComponent, pageLimit, dataLimit}) => {
+export const Pagination: React.FC<Props> = ({data, RenderComponent, pageLimit, dataLimit, getCountry, leaveCountry, changeAreaUnits, miles }) => {
     const [pages] = useState<number>(Math.round(data.length / dataLimit));
     const [currentPage, setCurrentPage] = useState<number>(1);
 
@@ -45,7 +49,9 @@ export const Pagination: React.FC<Props> = ({data, RenderComponent, pageLimit, d
     }
     const getPaginationGroup = () => {
         let start = Math.floor((currentPage - 1) / pageLimit) * pageLimit;
+        console.log(start)
         if(start === pages - 1) {
+          console.log(pages)
             return new Array([pages])
         } else {
             return new Array(pageLimit).fill(null).map((_, idx) => start + idx + 1);
@@ -63,13 +69,20 @@ export const Pagination: React.FC<Props> = ({data, RenderComponent, pageLimit, d
         {/* show the posts, 10 posts at a time */}
         <div className="dataContainer">
           {getPaginatedData().map((data, index) => (
-            <RenderComponent key={index} data={data} />
+            <RenderComponent 
+              key={index} 
+              data={data} 
+              getCountry={getCountry} 
+              leaveCountry={leaveCountry}
+              changeAreaUnits={changeAreaUnits}
+              miles={miles}
+              />
           ))}
         </div>
     
         {/* show the pagiantion
             it consists of next and previous buttons
-            along with page numbers, in our case, 5 page
+            along with page numbers, in our case, 8 page
             numbers at a time
         */}
         <div className="pagination">
@@ -84,9 +97,9 @@ export const Pagination: React.FC<Props> = ({data, RenderComponent, pageLimit, d
     
           {/* show page numbers */}
           {getPaginationGroup().map((item, index) => (
-            <button
-              key={index}
-              id={index.toString()}
+            <button 
+              key={index} 
+              id={index.toString()} 
               onClick={changePage}
               className={`paginationItem ${currentPage === item ? 'active' : 'inactive'}`}
             >

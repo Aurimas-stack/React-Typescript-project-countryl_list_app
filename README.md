@@ -7,3 +7,7 @@ Project done using React hooks and Typescript.
 - Pagination is used to display 10 lists per page.
 - User can use mouse click on pagination numbers, next or previous button to change the list.
 - User can change the list using right or left keyboard arrows.
+- User can sort list by country names (A-Z, Z-A).
+- User can sort list by area size (big-small, small-big).
+- User can sort list by countries which are smaller by inputted country.
+- User can changes km to miles and vice-versa.
