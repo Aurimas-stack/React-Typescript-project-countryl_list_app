@@ -6,18 +6,18 @@ type Props = {
     RenderComponent: any,
     pageLimit: number,
     dataLimit: number,
-    getCountry: (e: React.MouseEvent, name:string) => void,
-    leaveCountry: () => void,
-    changeAreaUnits: () => void,
+    changeAreaUnits: (e: React.MouseEvent, name:string) => void,
     miles: string[]
 }
 
-export const Pagination: React.FC<Props> = ({data, RenderComponent, pageLimit, dataLimit, getCountry, leaveCountry, changeAreaUnits, miles }) => {
+export const Pagination: React.FC<Props> = ({data, RenderComponent, pageLimit, dataLimit, changeAreaUnits, miles }) => {
+    let totalPage:number = Math.round(data.length / dataLimit);
+    console.log(totalPage)
     const [pages] = useState<number>(Math.round(data.length / dataLimit));
     const [currentPage, setCurrentPage] = useState<number>(1);
 
     const nextPage = (): void => {
-        if(currentPage <  pages) {
+        if(currentPage < totalPage) {
             setCurrentPage(page => page + 1);
         }
     }
@@ -33,7 +33,7 @@ export const Pagination: React.FC<Props> = ({data, RenderComponent, pageLimit, d
             }
         } 
         if(e.keyCode === 39) {
-            if(currentPage < pages) {
+            if(currentPage < totalPage) {
                 setCurrentPage(page => page + 1);
             }
         } 
@@ -48,14 +48,22 @@ export const Pagination: React.FC<Props> = ({data, RenderComponent, pageLimit, d
         return data.slice(startIndex, endIndex)
     }
     const getPaginationGroup = () => {
-        let start = Math.floor((currentPage - 1) / pageLimit) * pageLimit;
-        console.log(start)
-        if(start === pages - 1) {
-          console.log(pages)
-            return new Array([pages])
-        } else {
-            return new Array(pageLimit).fill(null).map((_, idx) => start + idx + 1);
-        }
+      let start = Math.floor((currentPage - 1) / pageLimit) * pageLimit;
+      let paginationNumbers = new Array(pageLimit).fill(null).map((_, idx) => start + idx + 1)
+      let index: number;
+      console.log(pages)
+      console.log(paginationNumbers.includes(pages))
+      if(paginationNumbers.includes(totalPage)) {
+        index = paginationNumbers.indexOf(totalPage);
+        console.log(index)
+        paginationNumbers.length = index + 1;
+        console.log(paginationNumbers)
+        return paginationNumbers
+      } else {
+        console.log(paginationNumbers)
+          return paginationNumbers
+      }
+
     }
     useEffect(() => {
         window.addEventListener("keydown", onArrowPress);
@@ -72,8 +80,6 @@ export const Pagination: React.FC<Props> = ({data, RenderComponent, pageLimit, d
             <RenderComponent 
               key={index} 
               data={data} 
-              getCountry={getCountry} 
-              leaveCountry={leaveCountry}
               changeAreaUnits={changeAreaUnits}
               miles={miles}
               />

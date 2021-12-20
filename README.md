@@ -1,13 +1,12 @@
-**in progress
+Country list project done using: https://restcountries.com/v2/all?fields=name,region,area,flag API.
 
-Project done using React hooks and Typescript.
-- On page load data is fetched. While data is being fetched, spinning element is displayed.
-- Once data is fetched, a list of countries is displayed.
-- List item contains: 1) Image of a flag 2) Name of the country 3) Region of the country 4) Total area. 
-- Pagination is used to display 10 lists per page.
-- User can use mouse click on pagination numbers, next or previous button to change the list.
-- User can change the list using right or left keyboard arrows.
-- User can sort list by country names (A-Z, Z-A).
-- User can sort list by area size (big-small, small-big).
-- User can sort list by countries which are smaller by inputted country.
-- User can changes km to miles and vice-versa.
+Done using React Hooks (useState - state, and useEffect - for loading data on page load) and Typescript:
+- On page spinning element is displayed, while data is being fetched. Once data is fetched, spinning element is not shown.
+- Fetched list contains 250 countries. There's 10 countries displayed per page using pagination.
+- Countries have this information: flag, name, region, area size.
+- Area size can be converted to miles (and vice versa) via a button.
+- Using pagination numbers, prev & next buttons and keyboard left & right arrows, list can be changed to show other countries.
+- List can be sorted by alphabet (A to Z, Z to A) via a button.
+- List can be sorted by total area size (smallest - biggest, and vice-versa) via a button.
+- List can be sorted by a region displayed in a select options.
+- List can be sorted by a countries which are smaller than a written country via input & button.

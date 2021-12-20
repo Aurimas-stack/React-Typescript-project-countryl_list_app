@@ -9,15 +9,13 @@ interface countryProvider {
 
 type Props = {
     data: countryProvider,
-    getCountry: (e: React.MouseEvent, name:string) => void,
-    leaveCountry: () => void,
-    changeAreaUnits: () => void,
+    changeAreaUnits: (e: React.MouseEvent, name:string) => void,
     miles: string[]
 }
 
 export const Country: React.FC<Props> = (props) => {
     return (
-        <div className="country" onMouseEnter={(e) => props.getCountry(e, props.data.name)} onMouseLeave={props.leaveCountry}>
+        <div className="country">
             <div className='flag-container'>
                 <img className='flag' src={props.data.flag} alt='flag' />
             </div>
@@ -25,7 +23,7 @@ export const Country: React.FC<Props> = (props) => {
                 <p className='info'><span className='info-name'>Country: </span>{props.data.name}</p>
                 <p className='info'><span className='info-name'>Region: </span>{props.data.region}</p>
                 <p className='info'><span className='info-name'>Area: </span>{props.data.area}
-                <button  className='area-btn'onClick={props.changeAreaUnits}>{props.miles.includes(props.data.name) ? ' m²' : ' km²'}</button></p>
+                <button  className='area-btn'onClick={(e) => props.changeAreaUnits(e, props.data.name)}>{props.miles.includes(props.data.name) ? ' m²' : ' km²'}</button></p>
             </div>
         </div>
     )
