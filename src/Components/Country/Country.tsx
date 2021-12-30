@@ -1,19 +1,18 @@
 import './Country.css'
 
-interface countryProvider {
-    flag:string, 
-    name: string, 
-    region: string, 
-    area: number
-}
+import { DataProvider } from '../Utils/types';
 
-type Props = {
-    data: countryProvider,
+
+
+export interface CountryProps {
+    data: DataProvider,
     changeAreaUnits: (e: React.MouseEvent, name:string) => void,
-    miles: string[]
+    miles: string[],
+
 }
 
-export const Country: React.FC<Props> = (props) => {
+export const Country: React.FC<CountryProps> = (props): JSX.Element => {
+    
     return (
         <div className="country">
             <div className='flag-container'>
@@ -23,8 +22,8 @@ export const Country: React.FC<Props> = (props) => {
                 <p className='info'><span className='info-name'>Country: </span>{props.data.name}</p>
                 <p className='info'><span className='info-name'>Region: </span>{props.data.region}</p>
                 <p className='info'><span className='info-name'>Area: </span>{props.data.area}
-                <button  className='area-btn'onClick={(e) => props.changeAreaUnits(e, props.data.name)}>{props.miles.includes(props.data.name) ? ' m²' : ' km²'}</button></p>
+                <button  className='area-btn'onClick={(e) => props.changeAreaUnits(e, props.data.name)}>{props.miles.includes(props.data.name) ? ' miles²' : ' km²'}</button></p>
             </div>
         </div>
-    )
+    ) 
 }

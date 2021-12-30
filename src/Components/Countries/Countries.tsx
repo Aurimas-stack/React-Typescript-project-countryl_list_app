@@ -1,75 +1,86 @@
-import './Countries.css';
-import {Country} from '../Country/Country';
-import { Pagination } from '../Pagination/Pagination';
+import "./Countries.css";
 
-interface dataProvider {
-    flag: string,
-    name: string,
-    region: string,
-    area: number
-}
+import { Country } from "../Country/Country";
 
-type Props = {
-    data: Array<dataProvider>,
-    changeAreaUnits: (e: React.MouseEvent, name:string) => void,
-    miles: string[],
-    nameShuffle: string,
-    shuffleByOrder: () => void,
-    bysize:string,
-    shuffleBySize: () => void,
-    bySpecificCountry: string,
-    setbySpecificCountry: (e: string) => void,
-    shuffleBySpecificCountry: () => void,
-    region: string,
-    setRegion: (e: any) => void,
-    shuffleByRegion: () => void
-}
+import { Pagination } from "../Pagination/Pagination";
 
-export const Countries:React.FC<Props> = (props) => {
-    return (
-        <div className='country-container'>
-            {
-                props.data.length > 0 ? 
-                <div className='btn-container'>
-                    <div className='button-name'>
-                        <h3>Shuffle countries by alphabet</h3>
-                        <button className='btn'onClick={props.shuffleByOrder}>{props.nameShuffle}</button>
-                    </div>
-                    <div className='button-name'>
-                        <h3>Shuffle countries by region</h3>
-                        <select defaultValue={"DEFAULT"} onChange={(e) => props.setRegion(e.target.value)}>
-                            <option value={"DEFAULT"} disabled>Pick a region</option>
-                            <option value={"Asia"}>Asia</option>
-                            <option value={"Europe"}>Europe</option>
-                            <option value={"Africa"}>Africa</option>
-                            <option value={"Americas"}>Americas</option>
-                            <option value={"Oceania"}>Oceania</option>
-                            <option value={"Polar"}>Polar</option>
-                        </select>
-                        <button className='btn' onClick={props.shuffleByRegion}>Filter</button> 
-                    </div>
-                    <div className='button-name area-countries'>
-                            <div>
-                                <h3>Find countries that smaller than:</h3>
-                                <input id="country-name" value={props.bySpecificCountry} onChange={(e) => props.setbySpecificCountry(e.target.value)}/>
-                                <button className='btn' onClick={props.shuffleBySpecificCountry}>By Specific country</button>
-                            </div>
-                            <button className='btn' onClick={props.shuffleBySize}>{props.bysize}</button>  
-                        </div>
-                </div> : null
-            }
-            {
-                props.data.length > 0 ? (
-                    <>
-                    <Pagination data={props.data} 
-                        RenderComponent={Country} 
-                        pageLimit={8} 
-                        dataLimit={10}
-                        changeAreaUnits={props.changeAreaUnits}
-                        miles={props.miles}/>
-                    </>
-                ) : null
-            }
+import { Button } from "../Small-Components/Buttons";
+import { Title } from "../Small-Components/Title";
+import { Options } from "../Small-Components/Option";
+
+import { DataProvider } from '../Utils/types'
+
+type Region =
+  | "Europe"
+  | "Asia"
+  | "Africa"
+  | "Americas"
+  | "Polar"
+  | "Oceania"
+  | "DEFAULT";
+
+interface Props {
+  data: DataProvider[];
+  miles: string[];
+  nameShuffle: string;
+  bysize: string;
+  bySpecificCountry: string | undefined;
+  region: string;
+  setbySpecificCountry: (e: string) => void;
+  shuffleBySpecificCountry: () => void;
+  shuffleBySize: () => void;
+  shuffleByOrder: () => void;
+  setRegion: (region: Region) => void;
+  changeAreaUnits: (e: React.MouseEvent, name: string) => void;
+  shuffleByRegion: () => void;
+};
+
+export const Countries: React.FC<Props> = (props): JSX.Element => {
+  return  (
+    <div className="country-container">
+        <div className="btn-container">
+          <div className="button-name">
+            <Title title={'Shuffle countries by alphabet'}/>
+            <Button generalName={'btn'} handler={props.shuffleByOrder} name={props.nameShuffle}/>
+          </div>
+          <div className="button-name">
+            <Title title={'Shuffle countries by region'}/>
+            <select
+              defaultValue="DEFAULT"
+              onChange={(e) => props.setRegion(e.target.value as Region)}
+            >
+              <option value="DEFAULT" disabled>
+                Pick a region
+              </option>
+              <Options />
+            </select>
+            <Button generalName={'btn'} handler={props.shuffleByRegion} name={'Filter'}/>
+          </div>
+          <div className="button-name area-countries">
+            <div>
+              <Title title={'Find countries that smaller than:'}/>
+              <input
+                placeholder="Type in a country"
+                id="country-name"
+                value={props.bySpecificCountry || ''}
+                onChange={(e) => {props.setbySpecificCountry(e.target.value); props.shuffleBySpecificCountry()}}
+              />
+            </div>
+            <Button generalName={'btn'} handler={props.shuffleBySize} name={props.bysize}/>
+          </div>
         </div>
-    )
-}
+        {props.data.length > 0 ?
+        <>
+          <Pagination
+            data={props.data}
+            RenderComponent={Country}
+            pageLimit={8}
+            dataLimit={10}
+            changeAreaUnits={props.changeAreaUnits}
+            miles={props.miles}
+          />
+        </>
+        : null }
+    </div>
+  ) 
+};

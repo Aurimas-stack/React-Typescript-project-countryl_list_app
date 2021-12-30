@@ -1,69 +1,70 @@
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
+
+import { DataProvider } from "../Utils/types";
+import { CountryProps } from "../Country/Country";
+import { Button } from "../Small-Components/Buttons";
+
+import { getPaginationGroupArray } from "../Utils/Utils";
+
 import './Pagination.css';
 
-type Props = {
-    data: any[],
-    RenderComponent: any,
-    pageLimit: number,
-    dataLimit: number,
-    changeAreaUnits: (e: React.MouseEvent, name:string) => void,
-    miles: string[]
+
+interface Props {
+  pageLimit: number;
+  dataLimit: number;
+  miles: string[];
+  data: DataProvider[];
+  RenderComponent: React.FunctionComponent<CountryProps>;
+  changeAreaUnits: (e: React.MouseEvent, name:string) => void;
 }
 
-export const Pagination: React.FC<Props> = ({data, RenderComponent, pageLimit, dataLimit, changeAreaUnits, miles }) => {
+export const Pagination: React.FC<Props> = ({data, RenderComponent, pageLimit, dataLimit, changeAreaUnits, miles }): JSX.Element => {
     let totalPage:number = Math.round(data.length / dataLimit);
-    console.log(totalPage)
     const [pages] = useState<number>(Math.round(data.length / dataLimit));
     const [currentPage, setCurrentPage] = useState<number>(1);
 
-    const nextPage = (): void => {
-        if(currentPage < totalPage) {
-            setCurrentPage(page => page + 1);
+    const nextPage = () => {
+        if(currentPage === totalPage) {
+            return;
         }
+
+        setCurrentPage(page => page + 1);
     }
-    const previousPage = (): void => {
-        if(currentPage > 1) {
-            setCurrentPage(page => page - 1);
+    const previousPage = () => {
+        if(currentPage === 1) {
+          return;
         }
+
+        setCurrentPage(page => page - 1);
     }
-    const onArrowPress = (e:any): void => {
-        if(e.keyCode === 37) {
-            if(currentPage > 1) {
-                setCurrentPage(page => page - 1);
-            }
+    const onArrowPress = (e: KeyboardEvent) => {
+        if(e.key === "ArrowLeft") {
+            previousPage();
         } 
-        if(e.keyCode === 39) {
-            if(currentPage < totalPage) {
-                setCurrentPage(page => page + 1);
-            }
+        if(e.key === "ArrowRight") {
+            nextPage();
         } 
     }
-    const changePage = (e: any): void => {
+    const changePage = (e: React.BaseSyntheticEvent) => {
         const page: number = Number(e.target.textContent);
         setCurrentPage(page)
     }
-    const getPaginatedData = () => {
+    const getPaginatedData = (): DataProvider[] => {
         const startIndex:number = currentPage * dataLimit - dataLimit;
         const endIndex:number = startIndex + dataLimit;
-        return data.slice(startIndex, endIndex)
+        return data.slice(startIndex, endIndex);
     }
-    const getPaginationGroup = () => {
-      let start = Math.floor((currentPage - 1) / pageLimit) * pageLimit;
-      let paginationNumbers = new Array(pageLimit).fill(null).map((_, idx) => start + idx + 1)
+    const getPaginationGroup = (): number[] => {
+      const paginationNumbers = getPaginationGroupArray(currentPage, pageLimit);
       let index: number;
-      console.log(pages)
-      console.log(paginationNumbers.includes(pages))
+
       if(paginationNumbers.includes(totalPage)) {
         index = paginationNumbers.indexOf(totalPage);
-        console.log(index)
         paginationNumbers.length = index + 1;
-        console.log(paginationNumbers)
         return paginationNumbers
-      } else {
-        console.log(paginationNumbers)
-          return paginationNumbers
-      }
+      } 
 
+      return paginationNumbers
     }
     useEffect(() => {
         window.addEventListener("keydown", onArrowPress);
@@ -93,13 +94,10 @@ export const Pagination: React.FC<Props> = ({data, RenderComponent, pageLimit, d
         */}
         <div className="pagination">
           {/* previous button */}
-          <button
-            onKeyDown={onArrowPress}
-            onClick={previousPage}
-            className={`prev ${currentPage === 1 ? 'disabled' : ''}`}
-          >
-            prev
-          </button>
+          <Button 
+            generalName={`prev ${currentPage === 1 ? 'disabled' : ''}`} 
+            handler={previousPage} 
+            name={'prev'}/>
     
           {/* show page numbers */}
           {getPaginationGroup().map((item, index) => (
@@ -114,13 +112,10 @@ export const Pagination: React.FC<Props> = ({data, RenderComponent, pageLimit, d
           ))}
     
           {/* next button */}
-          <button
-            onClick={nextPage}
-            onKeyDown={onArrowPress}
-            className={`next ${currentPage === pages ? 'disabled' : ''}`}
-          >
-            next
-          </button>
+          <Button 
+            generalName={`next ${currentPage === pages ? 'disabled' : ''}`} 
+            handler={nextPage} 
+            name={'next'}/>
         </div>
       </div>
     );
