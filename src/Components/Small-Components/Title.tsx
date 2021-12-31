@@ -1,11 +1,7 @@
-
-
 interface Props {
-    title:string
+  title: string;
 }
 
-export const Title: React.FC<Props> = ({title}): JSX.Element => {
-    return (
-        <h3>{title}</h3>
-    )
-}
+export const Title: React.FC<Props> = ({ title }): JSX.Element => {
+  return <h3>{title}</h3>;
+};
