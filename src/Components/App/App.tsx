@@ -6,7 +6,6 @@ import "./App.css";
 
 import { DataProvider, ShuffleProps, AppDataProps, DataSettersProps } from "../Utils/types";
 
-
 import {
   getUnits,
   getAlphabetOrder,
@@ -20,7 +19,7 @@ export default function App(): JSX.Element {
   const [data, setData] = useState<DataProvider[]>([]); 
   const [miles, setMiles] = useState<string[]>([]); 
   const [nameShuffle, setNameShuffle] = useState<string>("Order by letters"); 
-  const [bysize, setbysize] = useState<string>("Order by area"); 
+  const [letterOrder, setLetterOrder] = useState<string>("Order by area"); 
   const [bySpecificCountry, setbySpecificCountry] = useState<string | undefined>(undefined); 
   const [region, setRegion] = useState<string>("Pick a region"); 
   const [dataForRegion, setDataForRegion] = useState<DataProvider[]>([]); 
@@ -44,36 +43,29 @@ export default function App(): JSX.Element {
   }, []);
 
   const handleAreaUnits = (e: React.MouseEvent, name: string) => {
-    const country: string = name;
     const dataCopy: DataProvider[] = [...data];
-    const newMiles: string[] = miles.filter((removeCountry) => {
-      return removeCountry !== country;
-    });
-    const countryCopy: DataProvider[] = getFilter(data, country, "name");
-    const countryIndex: number = data
-      .map((country) => country.name)
-      .indexOf(country);
+    const countryCopy: DataProvider = getFilter(data, name, "name")[0];
 
-    if (country === undefined) return;
+    if (name === undefined) return;
 
-    if (!miles.includes(country)) {
-      countryCopy[0].area = getUnits(countryCopy[0].area, "miles");
-      setMiles([...miles, country]);
+    if (!miles.includes(name)) {
+      countryCopy.area = getUnits(countryCopy.area, "miles");
+      setMiles([...miles, name]);
     } else {
-      countryCopy[0].area = getUnits(countryCopy[0].area);
-      setMiles(newMiles);
+      countryCopy.area = getUnits(countryCopy.area);
+      setMiles(miles.filter((removeCountry) => {
+        return removeCountry !== name;
+      }));
     }
 
-    dataCopy[countryIndex] = countryCopy[0];
+    dataCopy[data.map((country) => country.name).indexOf(name)] = countryCopy;
     setData(dataCopy);
   };
 
   const handleShuffleByOrder = () => {
     const dataCopy: DataProvider[] = [...data];
 
-    if (dataCopy[1].name === "Åland Islands") {
-      dataCopy[1].name = "Aland Islands";
-    }
+    if (dataCopy[1].name === "Åland Islands") dataCopy[1].name = "Aland Islands";
 
     if (nameShuffle === "Order by letters" || nameShuffle === "Z/A") {
       getAlphabetOrder(dataCopy, "ascending");
@@ -89,12 +81,12 @@ export default function App(): JSX.Element {
   const handleShuffleBySize = () => {
     const dataCopy: DataProvider[] = [...data];
 
-    if (bysize === "Order by area" || bysize === "Smallest") {
+    if (letterOrder === "Order by area" || letterOrder === "Smallest") {
       getCountriesByArea(dataCopy, "Smallest");
-      setbysize("Biggest");
+      setLetterOrder("Biggest");
     } else {
       getCountriesByArea(dataCopy);
-      setbysize("Smallest");
+      setLetterOrder("Smallest");
     }
 
     setData(dataCopy);
@@ -103,9 +95,7 @@ export default function App(): JSX.Element {
   const handleShuffleBySpecificCountry = () => {
     if (bySpecificCountry === undefined) return;
 
-    if (bySpecificCountry.length <= 1) {
-      return setData(dataForRegion);
-    }
+    if (bySpecificCountry.length <= 1) return setData(dataForRegion);
 
     setData(
       data.filter((country) =>
@@ -114,15 +104,12 @@ export default function App(): JSX.Element {
     );
   };
 
-  const handleShuffleByRegion = (): void => {
-    const ifRegionExists: boolean = data.some(
-      (country) => country.region === region
-    );
+  const handleShuffleByRegion = () => {
     let newArr: DataProvider[];
 
     if (region === "Pick a region") return;
 
-    if (ifRegionExists) {
+    if (data.some((country) => country.region === region)) {
       newArr = getFilter(data, region);
     } else {
       newArr = getFilter(dataForRegion, region);
@@ -140,14 +127,15 @@ export default function App(): JSX.Element {
 
   const dataSetters: DataSettersProps = {
     setRegion,
-    setbySpecificCountry
-
+    setbySpecificCountry,
+    setData
   }
 
   const appData: AppDataProps = {
     data,
+    dataForRegion,
     miles,
-    bysize,
+    letterOrder,
     nameShuffle,
     bySpecificCountry
   }
@@ -155,18 +143,18 @@ export default function App(): JSX.Element {
   return (
     <div className="App">
       <h1 className="title">Country List</h1>
-      {loading === true && (
+      {error && <h2>{error}</h2>}
+      {loading === true ? 
         <div className="spinner-container">
           <div className="spinner"></div>
         </div>
-      )}
-      {error && <h2>{error}</h2>}
-      <Countries
-        appData={appData}
-        dataSetters={dataSetters}
-        shuffleHandlers={shuffleHandlers}
-        handleAreaUnits={(e, name) => handleAreaUnits(e, name)}
-      />
+       :
+        <Countries
+          appData={appData}
+          dataSetters={dataSetters}
+          shuffleHandlers={shuffleHandlers}
+          handleAreaUnits={(e, name) => handleAreaUnits(e, name)}
+        />}
     </div>
   );
 }

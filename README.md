@@ -9,4 +9,4 @@ Done using React Hooks (useState - state, and useEffect - for loading data on pa
 - List can be sorted by alphabet (A to Z, Z to A) via a button.
 - List can be sorted by total area size (smallest - biggest, and vice-versa) via a button.
 - List can be sorted by a region displayed in a select options.
-- List can be sorted by a countries which are smaller than a written country via input & button.
+- List can be sorted by a countries which are smaller than a written country via input.

@@ -19,10 +19,13 @@ interface Props {
 }
 
 export const Countries: React.FC<Props> = (props): JSX.Element => {
-
   return (
     <div className="country-container">
       <div className="btn-container">
+      <div className="button-name">
+        <Title title={"Reset the list"} />
+        <Button generalName={"btn"} reset={props.dataSetters.setData} data={props.appData.dataForRegion} name={"Reset list"}/>
+      </div>
         <div className="button-name">
           <Title title={"Shuffle countries by alphabet"} />
           <Button
@@ -53,11 +56,14 @@ export const Countries: React.FC<Props> = (props): JSX.Element => {
               }}
             />
           </div>
-          <Button
+          <div className="button-name">
+            <Title title={"Shuffle countries by area size"}/>
+            <Button
             generalName={"btn"}
             handler={props.shuffleHandlers.handleShuffleBySize}
-            name={props.appData.bysize}
-          />
+            name={props.appData.letterOrder}
+            />
+          </div>
         </div>
       </div>
       {props.appData.data.length > 0 ? (

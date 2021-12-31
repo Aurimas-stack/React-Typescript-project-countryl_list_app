@@ -1,12 +1,11 @@
-import { variables } from "./variables";
+import {  KM_TO_MILES_SQUARED } from "./variables";
 
 import { DataProvider } from "./types";
 
-export const getUnits = (area: number, miles?: string): number => {
-  if (miles === "miles") {
-    return Math.ceil((area * variables.kmToMiles * 100) / 100);
-  }
-  return Math.ceil(((area / variables.kmToMiles) * 100) / 100);
+export const getUnits = (area: number, measurement?: string): number => {
+  if (measurement === "miles") return Math.ceil((area * KM_TO_MILES_SQUARED * 100) / 100);
+
+  return Math.ceil(((area / KM_TO_MILES_SQUARED) * 100) / 100);
 };
 
 export const getAlphabetOrder = (
@@ -39,7 +38,7 @@ export const getPaginationGroupArray = (
   currPage: number,
   pageLimit: number
 ): number[] => {
-  const start = Math.floor((currPage - 1) / pageLimit) * pageLimit;
+  const start:number = Math.floor((currPage - 1) / pageLimit) * pageLimit;
   return new Array(pageLimit).fill(null).map((_, idx) => start + idx + 1);
 };
 
@@ -60,8 +59,7 @@ export const getCountriesByArea = (
   data: DataProvider[],
   order?: string
 ): DataProvider[] => {
-  if (order === "Smallest") {
-    return data.sort((a, b) => a.area - b.area);
-  }
+  if (order === "Smallest") return data.sort((a, b) => a.area - b.area);
+
   return data.sort((a, b) => b.area - a.area);
 };

@@ -1,3 +1,1 @@
-export const variables = {
-  kmToMiles: 0.3861,
-};
+export const KM_TO_MILES_SQUARED = 0.3861;

@@ -23,13 +23,15 @@ export interface ShuffleProps {
 
 export interface AppDataProps {
   data: DataProvider[];
+  dataForRegion: DataProvider[];
   miles: string[];
   nameShuffle: string;
-  bysize: string;
+  letterOrder: string;
   bySpecificCountry: string | undefined;
 }
 
 export interface DataSettersProps {
   setRegion: (region: Region) => void;
   setbySpecificCountry: (e: string) => void;
+  setData: (data: DataProvider[]) => void;
 }

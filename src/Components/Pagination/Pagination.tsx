@@ -25,12 +25,12 @@ export const Pagination: React.FC<Props> = ({
   handleAreaUnits,
   miles,
 }): JSX.Element => {
-  let totalPage: number = Math.ceil(data.length / dataLimit);
+  let totalPageCount: number = Math.ceil(data.length / dataLimit);
   const [pages] = useState<number>(Math.ceil(data.length / dataLimit));
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   const handleNextPage = () => {
-    if (currentPage === totalPage) {
+    if (currentPage === totalPageCount) {
       return;
     }
 
@@ -67,16 +67,16 @@ export const Pagination: React.FC<Props> = ({
   };
 
   const getPaginationGroup = (): number[] => {
-    const paginationNumbers = getPaginationGroupArray(currentPage, pageLimit);
+    const paginationNumberArray = getPaginationGroupArray(currentPage, pageLimit);
     let index: number;
 
-    if (paginationNumbers.includes(totalPage)) {
-      index = paginationNumbers.indexOf(totalPage);
-      paginationNumbers.length = index + 1;
-      return paginationNumbers;
+    if (paginationNumberArray.includes(totalPageCount)) {
+      index = paginationNumberArray.indexOf(totalPageCount);
+      paginationNumberArray.length = index + 1;
+      return paginationNumberArray;
     }
 
-    return paginationNumbers;
+    return paginationNumberArray;
   };
 
   useEffect(() => {
