@@ -49,6 +49,7 @@ export const Pagination: React.FC<Props> = ({
     if (e.key === "ArrowLeft") {
       handlePreviousPage();
     }
+
     if (e.key === "ArrowRight") {
       handleNextPage();
     }
@@ -98,12 +99,6 @@ export const Pagination: React.FC<Props> = ({
           />
         ))}
       </div>
-
-      {/* show the pagiantion
-            it consists of next and previous buttons
-            along with page numbers, in our case, 8 page
-            numbers at a time
-        */}
       <div className="pagination">
         {/* previous button */}
         <Button

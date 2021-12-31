@@ -8,23 +8,14 @@ import { Button } from "../Small-Components/Buttons";
 import { Title } from "../Small-Components/Title";
 import { Select } from "../Select/Select";
 
-import { DataProvider, Region } from "../Utils/types";
-
+import { ShuffleProps, AppDataProps, DataSettersProps } from "../Utils/types";
 
 
 interface Props {
-  data: DataProvider[];
-  miles: string[];
-  nameShuffle: string;
-  bysize: string;
-  bySpecificCountry: string | undefined;
-  setRegion: (region: Region) => void;
-  setbySpecificCountry: (e: string) => void;
+  appData: AppDataProps;
+  dataSetters: DataSettersProps;
+  shuffleHandlers: ShuffleProps;
   handleAreaUnits: (e: React.MouseEvent, name: string) => void;
-  onHandleShuffleBySize: () => void;
-  onHandleShuffleByOrder: () => void;
-  onHandleShuffleByRegion: () => void;
-  onHandleShuffleBySpecificCountry: () => void;
 }
 
 export const Countries: React.FC<Props> = (props): JSX.Element => {
@@ -36,16 +27,16 @@ export const Countries: React.FC<Props> = (props): JSX.Element => {
           <Title title={"Shuffle countries by alphabet"} />
           <Button
             generalName={"btn"}
-            handler={props.onHandleShuffleByOrder}
-            name={props.nameShuffle}
+            handler={props.shuffleHandlers.handleShuffleByOrder}
+            name={props.appData.nameShuffle}
           />
         </div>
         <div className="button-name">
           <Title title={"Shuffle countries by region"} />
-          <Select setRegion={props.setRegion} />
+          <Select setRegion={props.dataSetters.setRegion} />
           <Button
             generalName={"btn"}
-            handler={props.onHandleShuffleByRegion}
+            handler={props.shuffleHandlers.handleShuffleByRegion}
             name={"Filter"}
           />
         </div>
@@ -55,29 +46,29 @@ export const Countries: React.FC<Props> = (props): JSX.Element => {
             <input
               placeholder="Type in a country"
               id="country-name"
-              value={props.bySpecificCountry || ""}
+              value={props.appData.bySpecificCountry || ""}
               onChange={(e) => {
-                props.setbySpecificCountry(e.target.value);
-                props.onHandleShuffleBySpecificCountry();
+                props.dataSetters.setbySpecificCountry(e.target.value);
+                props.shuffleHandlers.handleShuffleBySpecificCountry();
               }}
             />
           </div>
           <Button
             generalName={"btn"}
-            handler={props.onHandleShuffleBySize}
-            name={props.bysize}
+            handler={props.shuffleHandlers.handleShuffleBySize}
+            name={props.appData.bysize}
           />
         </div>
       </div>
-      {props.data.length > 0 ? (
+      {props.appData.data.length > 0 ? (
         <>
           <Pagination
-            data={props.data}
+            data={props.appData.data}
             RenderComponent={Country}
             pageLimit={8}
             dataLimit={10}
             handleAreaUnits={props.handleAreaUnits}
-            miles={props.miles}
+            miles={props.appData.miles}
           />
         </>
       ) : null}

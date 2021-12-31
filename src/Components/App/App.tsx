@@ -4,7 +4,8 @@ import { Countries } from "../Countries/Countries";
 
 import "./App.css";
 
-import { DataProvider } from "../Utils/types";
+import { DataProvider, ShuffleProps, AppDataProps, DataSettersProps } from "../Utils/types";
+
 
 import {
   getUnits,
@@ -14,27 +15,24 @@ import {
 } from "../Utils/Utils";
 
 export default function App(): JSX.Element {
-  const [loading, setLoading] = useState<boolean>(true); //shows spinning element while data loads
-  const [error, setError] = useState<string>(); //to hold error information
-  const [data, setData] = useState<DataProvider[]>([]); //to hold all initial data
-  const [miles, setMiles] = useState<string[]>([]); //holds countries whichs area was converted to miles
-  const [nameShuffle, setNameShuffle] = useState<string>("Order by letters"); //for country order by A/Z, Z/A
-  const [bysize, setbysize] = useState<string>("Order by area"); //for country order by area size
-  const [bySpecificCountry, setbySpecificCountry] = useState<
-    string | undefined
-  >(undefined); //for country which is used for specific order by area (smaller than this country)
-  const [region, setRegion] = useState<string>("Pick a region"); //to hold region, in order to get all countries in that region
-  const [dataForRegion, setDataForRegion] = useState<DataProvider[]>([]); //to hold original data for when a region is picked
+  const [loading, setLoading] = useState<boolean>(true); 
+  const [error, setError] = useState<string>(); 
+  const [data, setData] = useState<DataProvider[]>([]); 
+  const [miles, setMiles] = useState<string[]>([]); 
+  const [nameShuffle, setNameShuffle] = useState<string>("Order by letters"); 
+  const [bysize, setbysize] = useState<string>("Order by area"); 
+  const [bySpecificCountry, setbySpecificCountry] = useState<string | undefined>(undefined); 
+  const [region, setRegion] = useState<string>("Pick a region"); 
+  const [dataForRegion, setDataForRegion] = useState<DataProvider[]>([]); 
 
   useEffect(() => {
     const getData = async (): Promise<void> => {
-      //function to fetch needed data
       try {
         const api: string =
           "https://restcountries.com/v2/all?fields=name,region,area,flag";
         const response: Response = await fetch(api);
         const responseData: DataProvider[] = await response.json();
-        setLoading(false); //once data loads dont show spinning element
+        setLoading(false); 
         setData([...responseData]);
         setDataForRegion([...responseData]);
       } catch (error: any) {
@@ -42,7 +40,7 @@ export default function App(): JSX.Element {
         setError(error.toString());
       }
     };
-    getData(); //fetch information on page load
+    getData(); 
   }, []);
 
   const handleAreaUnits = (e: React.MouseEvent, name: string) => {
@@ -121,7 +119,7 @@ export default function App(): JSX.Element {
       (country) => country.region === region
     );
     let newArr: DataProvider[];
-    
+
     if (region === "Pick a region") return;
 
     if (ifRegionExists) {
@@ -133,6 +131,27 @@ export default function App(): JSX.Element {
     setData(newArr);
   };
 
+  const shuffleHandlers: ShuffleProps = {
+    handleShuffleBySpecificCountry,
+    handleShuffleBySize,
+    handleShuffleByRegion,
+    handleShuffleByOrder,
+  }
+
+  const dataSetters: DataSettersProps = {
+    setRegion,
+    setbySpecificCountry
+
+  }
+
+  const appData: AppDataProps = {
+    data,
+    miles,
+    bysize,
+    nameShuffle,
+    bySpecificCountry
+  }
+
   return (
     <div className="App">
       <h1 className="title">Country List</h1>
@@ -143,18 +162,10 @@ export default function App(): JSX.Element {
       )}
       {error && <h2>{error}</h2>}
       <Countries
-        data={data}
+        appData={appData}
+        dataSetters={dataSetters}
+        shuffleHandlers={shuffleHandlers}
         handleAreaUnits={(e, name) => handleAreaUnits(e, name)}
-        miles={miles}
-        nameShuffle={nameShuffle}
-        onHandleShuffleByOrder={handleShuffleByOrder}
-        bysize={bysize}
-        onHandleShuffleBySize={handleShuffleBySize}
-        bySpecificCountry={bySpecificCountry}
-        setbySpecificCountry={setbySpecificCountry}
-        onHandleShuffleBySpecificCountry={handleShuffleBySpecificCountry}
-        setRegion={setRegion}
-        onHandleShuffleByRegion={handleShuffleByRegion}
       />
     </div>
   );
