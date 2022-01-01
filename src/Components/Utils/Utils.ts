@@ -42,7 +42,7 @@ export const getPaginationGroupArray = (
   return new Array(pageLimit).fill(null).map((_, idx) => start + idx + 1);
 };
 
-export const getFilter = (
+export const getCountry = (
   data: DataProvider[],
   selectedCountry: string,
   property?: string
